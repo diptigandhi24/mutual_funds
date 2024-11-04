@@ -23,17 +23,19 @@ function parseData(body) {
       fundData.set(funds[i][1], funds[i]);
     }
   }
-  return fundData;
+  return [headers, fundData];
 }
 
 exports.handler = async (req) => {
   let queryArry = JSON.parse(req.queryStringParameters["arr"]);
   const dataurl = "https://www.amfiindia.com/spages/NAVAll.txt";
   let fundData = new Map();
-  let csvdata = "data:text/csv;charset=utf-8,";
+  let csvdata = "";
   await axios.get(dataurl).then(function (response) {
     // handle success
-    fundData = parseData(response.data);
+    let headers = "";
+    [headers, fundData] = parseData(response.data);
+    csvdata = headers;
     queryArry.forEach((element) => {
       let rowArr = fundData.get(element);
       console.log(`input ${element}`, rowArr);
