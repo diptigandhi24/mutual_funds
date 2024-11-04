@@ -35,7 +35,7 @@ exports.handler = async (req) => {
     // handle success
     let headers = "";
     [headers, fundData] = parseData(response.data);
-    csvdata = headers;
+    csvdata = headers + "\r\n";
     queryArry.forEach((element) => {
       let rowArr = fundData.get(element);
       console.log(`input ${element}`, rowArr);
