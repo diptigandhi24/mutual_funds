@@ -1,6 +1,3 @@
-// export default function getMutualFundsData() {
-//   return "You are receiving data from Netlify";
-// }
 const axios = require("axios");
 
 function parseData(body) {
@@ -27,7 +24,16 @@ function parseData(body) {
 }
 
 exports.handler = async (req) => {
-  let queryArry = JSON.parse(req.queryStringParameters["arr"]);
+  let queryArry = [];
+  if (req.queryStringParameters["arr"] !== undefined) {
+    queryArry = JSON.parse(req.queryStringParameters["arr"]);
+  } else {
+    return {
+      statusCode: 200,
+      body: "Found no queries in url",
+    };
+  }
+
   const dataurl = "https://www.amfiindia.com/spages/NAVAll.txt";
   let fundData = new Map();
   let csvdata = "";
@@ -38,7 +44,6 @@ exports.handler = async (req) => {
     csvdata = headers + "\r\n";
     queryArry.forEach((element) => {
       let rowArr = fundData.get(element);
-      console.log(`input ${element}`, rowArr);
       let row = rowArr.join(",");
       // console.log("row", row);
       csvdata = csvdata + row + "\r\n";
