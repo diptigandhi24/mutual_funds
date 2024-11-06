@@ -55,8 +55,7 @@ exports.handler = async (req) => {
         let row = rowArr.join(",");
         csvdata = csvdata + row + "\r\n";
       } else {
-        let row =
-          "Error,ISIN Div Payout/ ISIN Growth,doesn't exits,please enter,valid,ISIN Growth";
+        let row = `Error,${element}ISIN Div Payout/ ISIN Growth,doesn't exits,please enter,valid,ISIN Growth`;
         csvdata = csvdata + row + "\r\n";
       }
     });
