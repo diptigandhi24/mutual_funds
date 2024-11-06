@@ -26,7 +26,14 @@ function parseData(body) {
 exports.handler = async (req) => {
   let queryArry = [];
   if (req.queryStringParameters["arr"] !== undefined) {
-    queryArry = JSON.parse(req.queryStringParameters["arr"]);
+    try {
+      queryArry = JSON.parse(req.queryStringParameters["arr"]);
+    } catch (e) {
+      return {
+        statusCode: 200,
+        body: "Didn't find the correct query in the url, please write the correct ISIN in the quotes",
+      };
+    }
   } else {
     return {
       statusCode: 200,
@@ -43,10 +50,15 @@ exports.handler = async (req) => {
     [headers, fundData] = parseData(response.data);
     csvdata = headers + "\r\n";
     queryArry.forEach((element) => {
-      let rowArr = fundData.get(element);
-      let row = rowArr.join(",");
-      // console.log("row", row);
-      csvdata = csvdata + row + "\r\n";
+      if (fundData.has(element)) {
+        let rowArr = fundData.get(element);
+        let row = rowArr.join(",");
+        csvdata = csvdata + row + "\r\n";
+      } else {
+        let row =
+          "Error,ISIN Div Payout/ ISIN Growth,didn't find,please enter,correct,ISIN Growth";
+        csvdata = csvdata + row + "\r\n";
+      }
     });
   });
   return {
